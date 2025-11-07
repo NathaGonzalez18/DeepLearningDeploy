@@ -246,7 +246,7 @@ if uploaded_file is not None:
 
     with col1:
         st.markdown("### 📸 Imagen Original")
-        st.image(img, use_container_width=True)
+        st.image(img, width=400)
 
     with col2:
         st.markdown("### 🎯 Resultados del Análisis")
@@ -292,7 +292,7 @@ if uploaded_file is not None:
             superimposed_img = cv2.addWeighted(img, 0.6, cv2.applyColorMap(heatmap_resized, cv2.COLORMAP_JET), 0.4, 0)
             
             with cols[i]:
-                st.image(superimposed_img, caption=f"Capa: {model.layers[idx_layer].name}", use_container_width=True)
+                st.image(superimposed_img, caption=f"Capa: {model.layers[idx_layer].name}", width=250)
 
     with tab2:
         st.markdown("### Análisis de Sensibilidad por Píxel")
@@ -312,4 +312,3 @@ else:
     # Mensaje cuando no hay imagen
     st.markdown("<br><br>", unsafe_allow_html=True)
     st.info("👆 Por favor, sube una imagen para comenzar el análisis")
-
