@@ -246,7 +246,7 @@ if uploaded_file is not None:
 
     with col1:
         st.markdown("### 📸 Imagen Original")
-        st.image(img, width=400)
+        st.image(img, width=500)
 
     with col2:
         st.markdown("### 🎯 Resultados del Análisis")
@@ -306,7 +306,7 @@ if uploaded_file is not None:
         
         col_center = st.columns([1, 2, 1])
         with col_center[1]:
-            st.image(superimposed_sal, use_container_width=True)
+            st.image(superimposed_sal, width=450)
 
 else:
     # Mensaje cuando no hay imagen
