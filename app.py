@@ -11,39 +11,164 @@ st.set_page_config(
     layout="wide"
 )
 
-# ---------------------- Estilos ----------------------
+# ---------------------- Estilos Mejorados ----------------------
 st.markdown("""
 <style>
-h1, h2, h3, h4 {
-    font-weight: 600;
-    text-align: center;
-    color: #C084FC;
-}
-[class^="stMetric"] {
-    background-color: #1a1b1e !important;
-    border-radius: 10px;
-    padding: 15px;
-}
-.uploadedFile {
-    background-color: #1a1b1e !important;
-    padding: 12px;
-    border-radius: 8px;
-}
-img {
-    border-radius: 12px;
-}
-.stButton>button {
-    background: linear-gradient(90deg, #8b5cf6, #c084fc);
-    color: white;
-    border-radius: 8px;
-    border: none;
-    padding: 0.6rem 1.2rem;
-    font-weight: 600;
-}
-.stButton>button:hover {
-    opacity: 0.88;
-    cursor: pointer;
-}
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+    
+    * {
+        font-family: 'Poppins', sans-serif;
+    }
+    
+    .stApp {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    }
+    
+    .main {
+        background-color: transparent;
+    }
+    
+    h1 {
+        font-weight: 700;
+        text-align: center;
+        color: #ffffff;
+        font-size: 3rem !important;
+        margin-bottom: 0.5rem;
+        text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+    }
+    
+    h2, h3 {
+        font-weight: 600;
+        color: #ffffff;
+        text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+    }
+    
+    .subtitle {
+        text-align: center;
+        color: #e9d5ff;
+        font-size: 1.2rem;
+        margin-bottom: 2rem;
+        font-weight: 300;
+    }
+    
+    /* Tarjetas con glassmorphism */
+    .card {
+        background: rgba(255, 255, 255, 0.15);
+        backdrop-filter: blur(10px);
+        border-radius: 20px;
+        padding: 2rem;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        border: 1px solid rgba(255, 255, 255, 0.18);
+        margin-bottom: 1.5rem;
+    }
+    
+    /* Métricas personalizadas */
+    [data-testid="stMetricValue"] {
+        font-size: 2rem;
+        font-weight: 700;
+        color: #ffffff;
+    }
+    
+    [data-testid="stMetricLabel"] {
+        color: #e9d5ff;
+        font-weight: 500;
+        font-size: 1rem;
+    }
+    
+    [data-testid="metric-container"] {
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(10px);
+        border-radius: 15px;
+        padding: 1.5rem;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+    
+    /* File uploader */
+    [data-testid="stFileUploader"] {
+        background: rgba(255, 255, 255, 0.15);
+        backdrop-filter: blur(10px);
+        border-radius: 15px;
+        padding: 2rem;
+        border: 2px dashed rgba(255, 255, 255, 0.3);
+    }
+    
+    [data-testid="stFileUploader"] label {
+        color: #ffffff !important;
+        font-weight: 500;
+        font-size: 1.1rem;
+    }
+    
+    /* Botones */
+    .stButton>button {
+        background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        color: white;
+        border-radius: 50px;
+        border: none;
+        padding: 0.8rem 2.5rem;
+        font-weight: 600;
+        font-size: 1rem;
+        box-shadow: 0 4px 15px rgba(240, 147, 251, 0.4);
+        transition: all 0.3s ease;
+    }
+    
+    .stButton>button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(240, 147, 251, 0.6);
+    }
+    
+    /* Tabs */
+    .stTabs [data-baseweb="tab-list"] {
+        gap: 1rem;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 15px;
+        padding: 0.5rem;
+    }
+    
+    .stTabs [data-baseweb="tab"] {
+        background: transparent;
+        color: #e9d5ff;
+        border-radius: 10px;
+        font-weight: 500;
+        padding: 0.8rem 1.5rem;
+    }
+    
+    .stTabs [aria-selected="true"] {
+        background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        color: white;
+    }
+    
+    /* Success message */
+    .stSuccess {
+        background: rgba(74, 222, 128, 0.2);
+        backdrop-filter: blur(10px);
+        border-radius: 15px;
+        border: 1px solid rgba(74, 222, 128, 0.3);
+        color: #ffffff;
+        font-weight: 500;
+    }
+    
+    /* Imágenes */
+    img {
+        border-radius: 20px;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+    }
+    
+    /* Contenedor de imagen */
+    [data-testid="stImage"] {
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(10px);
+        border-radius: 20px;
+        padding: 1rem;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+    
+    /* Caption */
+    [data-testid="stImageCaption"] {
+        color: #e9d5ff;
+        font-weight: 500;
+        text-align: center;
+        margin-top: 0.5rem;
+    }
 </style>
 """, unsafe_allow_html=True)
 
@@ -88,9 +213,13 @@ def saliency_map(model, image_tensor, class_index):
     return saliency.numpy()
 
 # ---------------------- Layout principal ----------------------
-st.title("Clasificación de Género con Interpretabilidad (Grad-CAM & Saliency Map)")
+st.title("🔮 Clasificador de Género con IA")
+st.markdown('<p class="subtitle">Análisis inteligente con visualización de interpretabilidad</p>', unsafe_allow_html=True)
 
-uploaded_file = st.file_uploader("Sube una imagen", type=["jpg", "jpeg", "png"])
+# Espaciado
+st.markdown("<br>", unsafe_allow_html=True)
+
+uploaded_file = st.file_uploader("📤 Sube una imagen para analizar", type=["jpg", "jpeg", "png"])
 
 if uploaded_file is not None:
     # Leer imagen
@@ -109,42 +238,78 @@ if uploaded_file is not None:
     pred_class = "Hombre" if prob_male > 0.5 else "Mujer"
     class_index = 1 if pred_class == "Hombre" else 0
 
-    # ---------------------- Columnas ----------------------
-    col1, col2 = st.columns(2)
+    # ---------------------- Espaciado ----------------------
+    st.markdown("<br>", unsafe_allow_html=True)
+
+    # ---------------------- Columnas Principales ----------------------
+    col1, col2 = st.columns([1, 1], gap="large")
 
     with col1:
-        st.image(img, caption="Imagen cargada", width=400)
+        st.markdown("### 📸 Imagen Original")
+        st.image(img, use_container_width=True)
 
     with col2:
-        st.subheader("Resultado de la Clasificación")
-        st.metric("Probabilidad Mujer", f"{prob_female:.3f}")
-        st.metric("Probabilidad Hombre", f"{prob_male:.3f}")
-        st.success(f"Clasificación: **{pred_class}** {'👨' if pred_class=='Hombre' else '👩'}")
+        st.markdown("### 🎯 Resultados del Análisis")
+        
+        # Métricas en subcolomnas
+        met1, met2 = st.columns(2)
+        with met1:
+            st.metric("👩 Mujer", f"{prob_female*100:.1f}%")
+        with met2:
+            st.metric("👨 Hombre", f"{prob_male*100:.1f}%")
+        
+        st.markdown("<br>", unsafe_allow_html=True)
+        
+        # Resultado final
+        emoji = '👨' if pred_class == 'Hombre' else '👩'
+        st.success(f"### {emoji} Clasificación: **{pred_class}**")
+        
+        # Barra de confianza
+        confidence = max(prob_male, prob_female) * 100
+        st.markdown(f"**Confianza:** {confidence:.1f}%")
+        st.progress(confidence / 100)
 
-    # ---------------------- Pestañas Grad-CAM y Saliency ----------------------
-    tab1, tab2 = st.tabs(["🔥 Grad-CAM", "🌈 Saliency Map"])
+    # ---------------------- Espaciado ----------------------
+    st.markdown("<br><br>", unsafe_allow_html=True)
+
+    # ---------------------- Pestañas Interpretabilidad ----------------------
+    st.markdown("## 🔍 Análisis de Interpretabilidad")
+    st.markdown('<p class="subtitle">Descubre qué regiones de la imagen influyeron en la decisión del modelo</p>', unsafe_allow_html=True)
+    
+    tab1, tab2 = st.tabs(["🔥 Grad-CAM (Mapas de Calor)", "🌈 Saliency Map (Sensibilidad)"])
 
     with tab1:
-        st.subheader("Grad-CAM: Regiones que más influyeron en la decisión")
-        target_layers_idx = [1, 3, 4]  # Ajusta según tu modelo
-        # Crear columnas dinámicamente según la cantidad de Grad-CAMs
+        st.markdown("### Regiones de Mayor Influencia")
+        st.markdown("Los mapas de calor muestran las áreas que más contribuyeron a la clasificación")
+        
+        target_layers_idx = [1, 3, 4]
         cols = st.columns(len(target_layers_idx))
+        
         for i, idx_layer in enumerate(target_layers_idx):
             heatmap = grad_cam_sequential(model, img_input, class_index=class_index, target_layer_index=idx_layer)
             heatmap_resized = cv2.resize(heatmap, (img.shape[1], img.shape[0]))
             heatmap_resized = np.uint8(255 * heatmap_resized)
             superimposed_img = cv2.addWeighted(img, 0.6, cv2.applyColorMap(heatmap_resized, cv2.COLORMAP_JET), 0.4, 0)
-            cols[i].image(superimposed_img, caption=f"{model.layers[idx_layer].name}", width=250)
-
+            
+            with cols[i]:
+                st.image(superimposed_img, caption=f"Capa: {model.layers[idx_layer].name}", use_container_width=True)
 
     with tab2:
-        st.subheader("Saliency Map: Sensibilidad por píxel")
+        st.markdown("### Análisis de Sensibilidad por Píxel")
+        st.markdown("Visualización de qué píxeles tienen mayor impacto en la predicción")
+        
         sal_map = saliency_map(model, img_input, class_index=class_index)
         sal_map_resized = cv2.resize(sal_map, (img.shape[1], img.shape[0]))
         sal_map_img = np.uint8(255 * sal_map_resized)
         sal_map_img = cv2.applyColorMap(sal_map_img, cv2.COLORMAP_JET)
         superimposed_sal = cv2.addWeighted(img, 0.6, sal_map_img, 0.4, 0)
-        st.image(superimposed_sal, caption="Saliency Map", width=300)
+        
+        col_center = st.columns([1, 2, 1])
+        with col_center[1]:
+            st.image(superimposed_sal, use_container_width=True)
 
-
+else:
+    # Mensaje cuando no hay imagen
+    st.markdown("<br><br>", unsafe_allow_html=True)
+    st.info("👆 Por favor, sube una imagen para comenzar el análisis")
 
