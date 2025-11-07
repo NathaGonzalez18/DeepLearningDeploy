@@ -11,32 +11,27 @@ st.set_page_config(
     layout="wide"
 )
 
+# ---------------------- Estilos ----------------------
 st.markdown("""
 <style>
-
 h1, h2, h3, h4 {
     font-weight: 600;
     text-align: center;
-    color: #C084FC; /* Púrpura brillante para títulos */
+    color: #C084FC;
 }
-
 [class^="stMetric"] {
     background-color: #1a1b1e !important;
     border-radius: 10px;
     padding: 15px;
 }
-
 .uploadedFile {
     background-color: #1a1b1e !important;
     padding: 12px;
     border-radius: 8px;
 }
-
 img {
     border-radius: 12px;
 }
-
-/* Botones estilo neón */
 .stButton>button {
     background: linear-gradient(90deg, #8b5cf6, #c084fc);
     color: white;
@@ -49,104 +44,99 @@ img {
     opacity: 0.88;
     cursor: pointer;
 }
-
 </style>
 """, unsafe_allow_html=True)
 
-
-
-
-# Cargar modelo
+# ---------------------- Cargar modelo ----------------------
 @st.cache_resource
 def load_model():
     model = tf.keras.models.load_model("modelo_genero.h5")
     return model
 
 model = load_model()
-
-IMG_SIZE = 224  # cambia si tu modelo usa otro tamaño
+IMG_SIZE = 224
 
 st.title("Clasificación de Género con Interpretabilidad (Grad-CAM & Saliency Map)")
 
 uploaded_file = st.file_uploader("Sube una imagen", type=["jpg", "jpeg", "png"])
 
-# ---------------------- Función Grad-CAM ----------------------
-def grad_cam(model, img_array, last_conv_layer_name="conv2d_5"):
-    grad_model = tf.keras.models.Model(
-        [model.inputs],
-        [model.get_layer(last_conv_layer_name).output, model.output]
-    )
+# ---------------------- Funciones ----------------------
+def grad_cam_sequential(model, image_tensor, class_index, target_layer_index):
     with tf.GradientTape() as tape:
-        conv_outputs, predictions = grad_model(img_array)
-        loss = predictions[:, 0]
+        x = image_tensor
+        for i, layer in enumerate(model.layers):
+            x = layer(x)
+            if i == target_layer_index:
+                conv_outputs = x
+        predictions = x
+        loss = predictions[:, 0] if class_index == 1 else 1 - predictions[:, 0]
 
-    grads = tape.gradient(loss, conv_outputs)[0]
+    grads = tape.gradient(loss, conv_outputs)
+    pooled_grads = tf.reduce_mean(grads, axis=(0, 1, 2))
     conv_outputs = conv_outputs[0]
+    heatmap = tf.reduce_sum(conv_outputs * pooled_grads, axis=-1)
+    heatmap = tf.maximum(heatmap, 0)
+    heatmap /= tf.reduce_max(heatmap) + 1e-8
+    return heatmap.numpy()
 
-    weights = tf.reduce_mean(grads, axis=(0, 1))
-    cam = np.zeros(conv_outputs.shape[:2], dtype=np.float32)
-
-    for i, w in enumerate(weights):
-        cam += w * conv_outputs[:, :, i]
-
-    cam = np.maximum(cam, 0)
-    cam = cam / cam.max()
-    cam = cv2.resize(cam, (IMG_SIZE, IMG_SIZE))
-    heatmap = cv2.applyColorMap(np.uint8(255 * cam), cv2.COLORMAP_JET)
-    return heatmap
-
-# ---------------------- Función Saliency Map ----------------------
-def saliency_map(model, img_array):
-    img_tensor = tf.convert_to_tensor(img_array)
+def saliency_map(model, image_tensor, class_index):
+    image_tensor = tf.convert_to_tensor(image_tensor)
+    image_tensor = tf.Variable(image_tensor)
     with tf.GradientTape() as tape:
-        tape.watch(img_tensor)
-        prediction = model(img_tensor)
-    gradient = tape.gradient(prediction, img_tensor)[0]
-    gradient = tf.reduce_max(tf.abs(gradient), axis=-1)
-    gradient = gradient.numpy()
-    gradient = (gradient - gradient.min()) / (gradient.max() - gradient.min())
-    return gradient
+        tape.watch(image_tensor)
+        pred = model(image_tensor)
+        loss = pred[:, 0] if class_index == 1 else 1 - pred[:, 0]
+    grads = tape.gradient(loss, image_tensor)[0]
+    saliency = tf.reduce_max(tf.abs(grads), axis=-1)
+    saliency = (saliency - tf.reduce_min(saliency)) / (tf.reduce_max(saliency) - tf.reduce_min(saliency) + 1e-8)
+    return saliency.numpy()
 
-# ---------------------- PROCESAMIENTO PRINCIPAL ----------------------
+# ---------------------- Procesamiento principal ----------------------
 if uploaded_file is not None:
-    image = Image.open(uploaded_file).convert("RGB")
-    st.image(image, caption="Imagen cargada", width=250)
+    # Leer imagen
+    file_bytes = np.asarray(bytearray(uploaded_file.read()), dtype=np.uint8)
+    img = cv2.imdecode(file_bytes, cv2.IMREAD_COLOR)
+    img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+    st.image(img, caption="Imagen cargada", use_column_width=True)
 
-    img = image.resize((IMG_SIZE, IMG_SIZE))
-    img_array = np.array(img) / 255.0
-    img_array = np.expand_dims(img_array, axis=0)
+    # Preprocesar
+    img_resized = cv2.resize(img, (IMG_SIZE, IMG_SIZE))
+    img_input = img_resized / 255.0
+    img_input = np.expand_dims(img_input, axis=0)
 
-    prob = model.predict(img_array)[0][0]
+    # Predicción
+    pred = model.predict(img_input)
+    prob_male = float(pred[0, 0])
+    prob_female = 1 - prob_male
+    pred_class = "Hombre" if prob_male > 0.5 else "Mujer"
+    class_index = 1 if pred_class == "Hombre" else 0
 
-        # --- Probabilidad Hombre/Mujer ---
-    prob_mujer = prob
-    prob_hombre = 1 - prob
-
-    # --- Generar Grad-CAM y Saliency ---
-    heatmap = grad_cam(model, img_array)
-    heatmap_overlay = cv2.addWeighted(np.array(img.resize((IMG_SIZE, IMG_SIZE))), 0.6, heatmap, 0.4, 0)
-
-    sal_map = saliency_map(model, img_array)
-
-    # --- PESTAÑAS ---
+    # Pestañas
     tab1, tab2, tab3 = st.tabs(["🔍 Clasificación", "🔥 Grad-CAM", "🌈 Saliency Map"])
 
     with tab1:
         st.subheader("Resultado de la Clasificación")
-        st.image(image, caption="Imagen original", use_column_width=True)
-        st.metric("Probabilidad Mujer", f"{prob_mujer:.3f}")
-        st.metric("Probabilidad Hombre", f"{prob_hombre:.3f}")
-
-        if prob_mujer >= 0.5:
-            st.success("Clasificación: **Mujer** 👩")
-        else:
-            st.success("Clasificación: **Hombre** 👨")
+        st.metric("Probabilidad Mujer", f"{prob_female:.3f}")
+        st.metric("Probabilidad Hombre", f"{prob_male:.3f}")
+        st.success(f"Clasificación: **{pred_class}** {'👨' if pred_class=='Hombre' else '👩'}")
 
     with tab2:
         st.subheader("Grad-CAM: Regiones que más influyeron en la decisión")
-        st.image(heatmap_overlay, channels="BGR", use_column_width=True)
+        target_layers_idx = [0, 2, 4]  # Ajusta según tu modelo
+        for idx_layer in target_layers_idx:
+            heatmap = grad_cam_sequential(model, img_input, class_index=class_index, target_layer_index=idx_layer)
+            heatmap_resized = cv2.resize(heatmap, (img.shape[1], img.shape[0]))
+            heatmap_resized = np.uint8(255 * heatmap_resized)
+            superimposed_img = cv2.addWeighted(img, 0.6, cv2.applyColorMap(heatmap_resized, cv2.COLORMAP_JET), 0.4, 0)
+            st.image(superimposed_img, caption=f"Grad-CAM: {model.layers[idx_layer].name}", use_column_width=True)
 
     with tab3:
         st.subheader("Saliency Map: Sensibilidad por píxel")
-        st.image(sal_map, clamp=True, use_column_width=True)
+        sal_map = saliency_map(model, img_input, class_index=class_index)
+        sal_map_resized = cv2.resize(sal_map, (img.shape[1], img.shape[0]))
+        sal_map_img = np.uint8(255 * sal_map_resized)
+        sal_map_img = cv2.applyColorMap(sal_map_img, cv2.COLORMAP_JET)
+        superimposed_sal = cv2.addWeighted(img, 0.6, sal_map_img, 0.4, 0)
+        st.image(superimposed_sal, caption="Saliency Map", use_column_width=True)
+
 
