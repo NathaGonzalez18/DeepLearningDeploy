@@ -1,3 +1,10 @@
+import streamlit as st
+import tensorflow as tf
+import numpy as np
+import cv2
+from PIL import Image
+import matplotlib.pyplot as plt
+
 st.set_page_config(
     page_title="Clasificador de Género",
     page_icon="🟣",
@@ -47,12 +54,7 @@ img {
 """, unsafe_allow_html=True)
 
 
-import streamlit as st
-import tensorflow as tf
-import numpy as np
-import cv2
-from PIL import Image
-import matplotlib.pyplot as plt
+
 
 # Cargar modelo
 @st.cache_resource
