@@ -71,7 +71,7 @@ st.title("Clasificación de Género con Interpretabilidad (Grad-CAM & Saliency M
 uploaded_file = st.file_uploader("Sube una imagen", type=["jpg", "jpeg", "png"])
 
 # ---------------------- Función Grad-CAM ----------------------
-def grad_cam(model, img_array, last_conv_layer_name="conv1_block3"):
+def grad_cam(model, img_array, last_conv_layer_name="conv2d_5"):
     grad_model = tf.keras.models.Model(
         [model.inputs],
         [model.get_layer(last_conv_layer_name).output, model.output]
