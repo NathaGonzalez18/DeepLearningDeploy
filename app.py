@@ -65,10 +65,10 @@ def grad_cam_sequential(model, image_tensor, class_index, target_layer_index):
             if i == target_layer_index:
                 conv_outputs = x
         predictions = x
-        loss = predictions[:, 0] if class_index == 1 else 1 - predictions[:, 0]
+        loss = predictions[:,0] if class_index == 1 else 1 - predictions[:,0]
 
     grads = tape.gradient(loss, conv_outputs)
-    pooled_grads = tf.reduce_mean(grads, axis=(0, 1, 2))
+    pooled_grads = tf.reduce_mean(grads, axis=(0,1,2))
     conv_outputs = conv_outputs[0]
     heatmap = tf.reduce_sum(conv_outputs * pooled_grads, axis=-1)
     heatmap = tf.maximum(heatmap, 0)
@@ -127,12 +127,14 @@ if uploaded_file is not None:
     with tab1:
         st.subheader("Grad-CAM: Regiones que más influyeron en la decisión")
         target_layers_idx = [0, 2, 4]  # Ajusta según tu modelo
-        for idx_layer in target_layers_idx:
+        # Crear columnas dinámicamente según la cantidad de Grad-CAMs
+        cols = st.columns(len(target_layers_idx))
+        for i, idx_layer in enumerate(target_layers_idx):
             heatmap = grad_cam_sequential(model, img_input, class_index=class_index, target_layer_index=idx_layer)
             heatmap_resized = cv2.resize(heatmap, (img.shape[1], img.shape[0]))
             heatmap_resized = np.uint8(255 * heatmap_resized)
             superimposed_img = cv2.addWeighted(img, 0.6, cv2.applyColorMap(heatmap_resized, cv2.COLORMAP_JET), 0.4, 0)
-            st.image(superimposed_img, caption=f"Grad-CAM: {model.layers[idx_layer].name}", use_column_width=True)
+            cols[i].image(superimposed_img, caption=f"{model.layers[idx_layer].name}", width=250)
 
 
     with tab2:
