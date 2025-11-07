@@ -126,7 +126,7 @@ if uploaded_file is not None:
 
     with tab1:
         st.subheader("Grad-CAM: Regiones que más influyeron en la decisión")
-        target_layers_idx = [1, 3, 4]  # Ajusta según tu modelo
+        target_layers_idx = [2, 3, 5]  # Ajusta según tu modelo
         # Crear columnas dinámicamente según la cantidad de Grad-CAMs
         cols = st.columns(len(target_layers_idx))
         for i, idx_layer in enumerate(target_layers_idx):
