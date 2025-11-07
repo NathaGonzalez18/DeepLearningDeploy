@@ -56,10 +56,6 @@ def load_model():
 model = load_model()
 IMG_SIZE = 224
 
-st.title("Clasificación de Género con Interpretabilidad (Grad-CAM & Saliency Map)")
-
-uploaded_file = st.file_uploader("Sube una imagen", type=["jpg", "jpeg", "png"])
-
 # ---------------------- Funciones ----------------------
 def grad_cam_sequential(model, image_tensor, class_index, target_layer_index):
     with tf.GradientTape() as tape:
@@ -91,17 +87,19 @@ def saliency_map(model, image_tensor, class_index):
     saliency = (saliency - tf.reduce_min(saliency)) / (tf.reduce_max(saliency) - tf.reduce_min(saliency) + 1e-8)
     return saliency.numpy()
 
-# ---------------------- Procesamiento principal ----------------------
+# ---------------------- Layout principal ----------------------
+st.title("Clasificación de Género con Interpretabilidad (Grad-CAM & Saliency Map)")
+
+uploaded_file = st.file_uploader("Sube una imagen", type=["jpg", "jpeg", "png"])
+
 if uploaded_file is not None:
     # Leer imagen
     file_bytes = np.asarray(bytearray(uploaded_file.read()), dtype=np.uint8)
     img = cv2.imdecode(file_bytes, cv2.IMREAD_COLOR)
     img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
-    st.image(img, caption="Imagen cargada", use_column_width=True)
 
-    # Preprocesar
-    img_resized = cv2.resize(img, (IMG_SIZE, IMG_SIZE))
-    img_input = img_resized / 255.0
+    # Preprocesar para modelo
+    img_input = cv2.resize(img, (IMG_SIZE, IMG_SIZE)) / 255.0
     img_input = np.expand_dims(img_input, axis=0)
 
     # Predicción
@@ -111,16 +109,22 @@ if uploaded_file is not None:
     pred_class = "Hombre" if prob_male > 0.5 else "Mujer"
     class_index = 1 if pred_class == "Hombre" else 0
 
-    # Pestañas
-    tab1, tab2, tab3 = st.tabs(["🔍 Clasificación", "🔥 Grad-CAM", "🌈 Saliency Map"])
+    # ---------------------- Columnas ----------------------
+    col1, col2 = st.columns(2)
 
-    with tab1:
+    with col1:
+        st.image(img, caption="Imagen cargada", width=300)
+
+    with col2:
         st.subheader("Resultado de la Clasificación")
         st.metric("Probabilidad Mujer", f"{prob_female:.3f}")
         st.metric("Probabilidad Hombre", f"{prob_male:.3f}")
         st.success(f"Clasificación: **{pred_class}** {'👨' if pred_class=='Hombre' else '👩'}")
 
-    with tab2:
+    # ---------------------- Pestañas Grad-CAM y Saliency ----------------------
+    tab1, tab2 = st.tabs(["🔥 Grad-CAM", "🌈 Saliency Map"])
+
+    with tab1:
         st.subheader("Grad-CAM: Regiones que más influyeron en la decisión")
         target_layers_idx = [0, 2, 4]  # Ajusta según tu modelo
         for idx_layer in target_layers_idx:
@@ -128,15 +132,16 @@ if uploaded_file is not None:
             heatmap_resized = cv2.resize(heatmap, (img.shape[1], img.shape[0]))
             heatmap_resized = np.uint8(255 * heatmap_resized)
             superimposed_img = cv2.addWeighted(img, 0.6, cv2.applyColorMap(heatmap_resized, cv2.COLORMAP_JET), 0.4, 0)
-            st.image(superimposed_img, caption=f"Grad-CAM: {model.layers[idx_layer].name}", use_column_width=True)
+            st.image(superimposed_img, caption=f"Grad-CAM: {model.layers[idx_layer].name}", width=300)
 
-    with tab3:
+    with tab2:
         st.subheader("Saliency Map: Sensibilidad por píxel")
         sal_map = saliency_map(model, img_input, class_index=class_index)
         sal_map_resized = cv2.resize(sal_map, (img.shape[1], img.shape[0]))
         sal_map_img = np.uint8(255 * sal_map_resized)
         sal_map_img = cv2.applyColorMap(sal_map_img, cv2.COLORMAP_JET)
         superimposed_sal = cv2.addWeighted(img, 0.6, sal_map_img, 0.4, 0)
-        st.image(superimposed_sal, caption="Saliency Map", use_column_width=True)
+        st.image(superimposed_sal, caption="Saliency Map", width=300)
+
 
 
