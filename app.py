@@ -62,14 +62,14 @@ st.markdown("""
     }
     
     .logo-box {
-        width: 110px;
-        height: 110px;
+        width: 210px;
+        height: 210px;
         background: white;
         border-radius: 10px;
         display: flex;
         align-items: center;
         justify-content: center;
-        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
         overflow: hidden;
     }
     
@@ -317,7 +317,7 @@ try:
                 </div>
             </div>
             <div class="title-container">
-                <h1 class="header-title">Clasificador de Género con IA</h1>
+                <h1 class="header-title">Clasificador de Género con IA 🔮 </h1>
                 <p class="header-subtitle">Análisis inteligente con visualización de interpretabilidad</p>
             </div>
             <div class="logo-container">
