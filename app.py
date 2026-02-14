@@ -207,7 +207,7 @@ st.markdown("""
         border: none;
         padding: 0.8rem 2.5rem;
         font-weight: 600;
-        font-size: 3rem;
+        font-size: 4.5rem;
         box-shadow: 0 4px 15px rgba(45, 155, 164, 0.4);
         transition: all 0.3s ease;
     }
