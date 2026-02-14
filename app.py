@@ -301,7 +301,7 @@ st.markdown("""
 try:
     # 👇 CAMBIA ESTAS RUTAS POR LAS DE TUS LOGOS 👇
     logo_left = Image.open("/Users/nathagonzalez/Documents/Universidad/DeepLearning/ProyectoDeepDeploy/DeepLearningDeploy/logo-externado.png")
-    logo_right = Image.open("NeuroMInds2.png")
+    logo_right = Image.open("/Users/nathagonzalez/Documents/Universidad/DeepLearning/ProyectoDeepDeploy/DeepLearningDeploy/NeuroMInds2.png")
     # 👆 CAMBIA ESTAS RUTAS POR LAS DE TUS LOGOS 👆
     
     logo_left_b64 = image_to_base64(logo_left)
