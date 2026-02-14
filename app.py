@@ -147,7 +147,7 @@ st.markdown("""
     .subtitle {
         text-align: center;
         color: #a8b2d1;
-        font-size: 2.2rem;
+        font-size: 3.2rem;
         margin-bottom: 2rem;
         font-weight: 300;
     }
@@ -426,7 +426,11 @@ def saliency_map(model, image_tensor, class_index):
 # Espaciado
 st.markdown("<br>", unsafe_allow_html=True)
 
-uploaded_file = st.file_uploader("📤 Sube una imagen para analizar", type=["jpg", "jpeg", "png"])
+st.markdown("### 📤 Sube una imagen para analizar")  # Título más grande
+#           ^^^
+#        Cambia ### a ## (más grande) o #### (más pequeño)
+
+uploaded_file = st.file_uploader("", type=["jpg", "jpeg", "png"], label_visibility="collapsed")
 
 if uploaded_file is not None:
     # Leer imagen
@@ -486,8 +490,8 @@ if uploaded_file is not None:
     tab1, tab2 = st.tabs(["🔥 Grad-CAM (Mapas de Calor)", "🌈 Saliency Map (Sensibilidad)"])
 
     with tab1:
-        st.markdown("### Regiones de Mayor Influencia")
-        st.markdown("Los mapas de calor muestran las áreas que más contribuyeron a la clasificación")
+        st.markdown("## Regiones de Mayor Influencia")
+        st.markdown("###Los mapas de calor muestran las áreas que más contribuyeron a la clasificación")
         
         target_layers_idx = [1, 3, 4]
         cols = st.columns(len(target_layers_idx))
@@ -502,8 +506,8 @@ if uploaded_file is not None:
                 st.image(superimposed_img, caption=f"Capa: {model.layers[idx_layer].name}", width=400)
 
     with tab2:
-        st.markdown("### Análisis de Sensibilidad por Píxel")
-        st.markdown("Visualización de qué píxeles tienen mayor impacto en la predicción")
+        st.markdown("## Análisis de Sensibilidad por Píxel")
+        st.markdown("###Visualización de qué píxeles tienen mayor impacto en la predicción")
         
         sal_map = saliency_map(model, img_input, class_index=class_index)
         sal_map_resized = cv2.resize(sal_map, (img.shape[1], img.shape[0]))
