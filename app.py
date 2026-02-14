@@ -4,48 +4,149 @@ import numpy as np
 import cv2
 from PIL import Image
 import matplotlib.pyplot as plt
+import base64
+from io import BytesIO
 
 st.set_page_config(
     page_title="Clasificador de Género",
-    page_icon="🟣",
+    page_icon="🔮",
     layout="wide"
 )
 
-# ---------------------- Estilos Mejorados ----------------------
+# ---------------------- Función para convertir imagen a base64 ----------------------
+def image_to_base64(image):
+    buffered = BytesIO()
+    image.save(buffered, format="PNG")
+    img_str = base64.b64encode(buffered.getvalue()).decode()
+    return f"data:image/png;base64,{img_str}"
+
+# ---------------------- Estilos Universidad Externado ----------------------
 st.markdown("""
 <style>
-    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap');
     
     * {
         font-family: 'Poppins', sans-serif;
     }
     
+    /* Fondo con gradiente Universidad Externado */
     .stApp {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
     }
     
     .main {
         background-color: transparent;
     }
     
+    /* Header personalizado con logos */
+    .custom-header {
+        background: linear-gradient(135deg, #1a5f3f 0%, #2d9ba4 100%);
+        padding: 1.5rem 2rem;
+        border-radius: 15px;
+        margin-bottom: 2rem;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    }
+    
+    .header-content {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-wrap: nowrap;
+        gap: 1.5rem;
+        max-width: 100%;
+    }
+    
+    .logo-container {
+        flex: 0 0 auto;
+        min-width: 80px;
+    }
+    
+    .logo-box {
+        width: 80px;
+        height: 80px;
+        background: white;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+        overflow: hidden;
+    }
+    
+    .logo-box img {
+        max-width: 90%;
+        max-height: 90%;
+        object-fit: contain;
+        padding: 5px;
+    }
+    
+    .logo-icon {
+        font-size: 2.5rem;
+    }
+    
+    .title-container {
+        flex: 1 1 auto;
+        text-align: center;
+        min-width: 0;
+    }
+    
+    .header-title {
+        margin: 0;
+        color: #FFD700 !important;
+        font-size: 2.2rem;
+        font-weight: 900;
+        text-shadow: 3px 3px 8px rgba(0, 0, 0, 0.9);
+        line-height: 1.2;
+        letter-spacing: 0.5px;
+    }
+    
+    .header-subtitle {
+        margin: 0.5rem 0 0 0;
+        color: rgba(255, 255, 255, 0.95);
+        font-size: 0.95rem;
+        font-weight: 500;
+        text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+    }
+    
+    /* Responsive */
+    @media (max-width: 600px) {
+        .header-content {
+            gap: 1rem;
+        }
+        
+        .logo-box {
+            width: 60px;
+            height: 60px;
+        }
+        
+        .header-title {
+            font-size: 1.5rem;
+        }
+        
+        .header-subtitle {
+            font-size: 0.85rem;
+        }
+    }
+    
+    /* Títulos */
     h1 {
         font-weight: 700;
         text-align: center;
-        color: #ffffff;
+        color: #2d9ba4;
         font-size: 3rem !important;
         margin-bottom: 0.5rem;
-        text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
     }
     
     h2, h3 {
         font-weight: 600;
-        color: #ffffff;
-        text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+        color: #2d9ba4;
+        text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
     }
     
     .subtitle {
         text-align: center;
-        color: #e9d5ff;
+        color: #a8b2d1;
         font-size: 1.2rem;
         margin-bottom: 2rem;
         font-weight: 300;
@@ -53,12 +154,12 @@ st.markdown("""
     
     /* Tarjetas con glassmorphism */
     .card {
-        background: rgba(255, 255, 255, 0.15);
+        background: rgba(45, 155, 164, 0.15);
         backdrop-filter: blur(10px);
         border-radius: 20px;
         padding: 2rem;
-        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-        border: 1px solid rgba(255, 255, 255, 0.18);
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        border: 1px solid rgba(45, 155, 164, 0.3);
         margin-bottom: 1.5rem;
     }
     
@@ -66,111 +167,189 @@ st.markdown("""
     [data-testid="stMetricValue"] {
         font-size: 2rem;
         font-weight: 700;
-        color: #ffffff;
+        color: #FFD700;
     }
     
     [data-testid="stMetricLabel"] {
-        color: #e9d5ff;
+        color: #a8b2d1;
         font-weight: 500;
         font-size: 1rem;
     }
     
     [data-testid="metric-container"] {
-        background: rgba(255, 255, 255, 0.1);
+        background: rgba(45, 155, 164, 0.15);
         backdrop-filter: blur(10px);
         border-radius: 15px;
         padding: 1.5rem;
-        border: 1px solid rgba(255, 255, 255, 0.2);
+        border: 1px solid rgba(45, 155, 164, 0.3);
     }
     
     /* File uploader */
     [data-testid="stFileUploader"] {
-        background: rgba(255, 255, 255, 0.15);
+        background: rgba(45, 155, 164, 0.15);
         backdrop-filter: blur(10px);
         border-radius: 15px;
         padding: 2rem;
-        border: 2px dashed rgba(255, 255, 255, 0.3);
+        border: 2px dashed rgba(45, 155, 164, 0.5);
     }
     
     [data-testid="stFileUploader"] label {
-        color: #ffffff !important;
+        color: #a8b2d1 !important;
         font-weight: 500;
         font-size: 1.1rem;
     }
     
     /* Botones */
     .stButton>button {
-        background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        background: linear-gradient(135deg, #2d9ba4 0%, #1a5f3f 100%);
         color: white;
         border-radius: 50px;
         border: none;
         padding: 0.8rem 2.5rem;
         font-weight: 600;
         font-size: 1rem;
-        box-shadow: 0 4px 15px rgba(240, 147, 251, 0.4);
+        box-shadow: 0 4px 15px rgba(45, 155, 164, 0.4);
         transition: all 0.3s ease;
     }
     
     .stButton>button:hover {
         transform: translateY(-2px);
-        box-shadow: 0 6px 20px rgba(240, 147, 251, 0.6);
+        box-shadow: 0 6px 20px rgba(45, 155, 164, 0.6);
+        background: linear-gradient(135deg, #1a5f3f 0%, #2d9ba4 100%);
     }
     
     /* Tabs */
     .stTabs [data-baseweb="tab-list"] {
         gap: 1rem;
-        background: rgba(255, 255, 255, 0.1);
+        background: rgba(45, 155, 164, 0.1);
         border-radius: 15px;
         padding: 0.5rem;
     }
     
     .stTabs [data-baseweb="tab"] {
         background: transparent;
-        color: #e9d5ff;
+        color: #a8b2d1;
         border-radius: 10px;
         font-weight: 500;
         padding: 0.8rem 1.5rem;
     }
     
     .stTabs [aria-selected="true"] {
-        background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        background: linear-gradient(135deg, #2d9ba4 0%, #1a5f3f 100%);
         color: white;
     }
     
     /* Success message */
     .stSuccess {
-        background: rgba(74, 222, 128, 0.2);
+        background: rgba(45, 155, 164, 0.2);
         backdrop-filter: blur(10px);
         border-radius: 15px;
-        border: 1px solid rgba(74, 222, 128, 0.3);
-        color: #ffffff;
+        border: 1px solid rgba(45, 155, 164, 0.4);
+        color: #a8b2d1;
+        font-weight: 500;
+    }
+    
+    /* Info message */
+    .stInfo {
+        background: rgba(45, 155, 164, 0.15);
+        backdrop-filter: blur(10px);
+        border-radius: 15px;
+        border: 1px solid rgba(45, 155, 164, 0.3);
+        color: #a8b2d1;
         font-weight: 500;
     }
     
     /* Imágenes */
     img {
         border-radius: 20px;
-        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
     }
     
     /* Contenedor de imagen */
     [data-testid="stImage"] {
-        background: rgba(255, 255, 255, 0.1);
+        background: rgba(45, 155, 164, 0.1);
         backdrop-filter: blur(10px);
         border-radius: 20px;
         padding: 1rem;
-        border: 1px solid rgba(255, 255, 255, 0.2);
+        border: 1px solid rgba(45, 155, 164, 0.3);
     }
     
     /* Caption */
     [data-testid="stImageCaption"] {
-        color: #e9d5ff;
+        color: #a8b2d1;
         font-weight: 500;
         text-align: center;
         margin-top: 0.5rem;
     }
+    
+    /* Progress bar */
+    .stProgress > div > div > div {
+        background: linear-gradient(90deg, #2d9ba4 0%, #1a5f3f 100%);
+    }
+    
+    /* Ocultar elementos de Streamlit */
+    #MainMenu {visibility: hidden;}
+    footer {visibility: hidden;}
+    header {visibility: hidden;}
 </style>
 """, unsafe_allow_html=True)
+
+# ============================================
+# ENCABEZADO CON LOGOS
+# ============================================
+
+try:
+    # 👇 CAMBIA ESTAS RUTAS POR LAS DE TUS LOGOS 👇
+    logo_left = Image.open("/Users/nathagonzalez/Documents/Universidad/DeepLearning/ProyectoDeepDeploy/DeepLearningDeploy/logo-externado.png")
+    logo_right = Image.open("NeuroMInds2.png")
+    # 👆 CAMBIA ESTAS RUTAS POR LAS DE TUS LOGOS 👆
+    
+    logo_left_b64 = image_to_base64(logo_left)
+    logo_right_b64 = image_to_base64(logo_right)
+    
+    st.markdown(f'''
+    <div class="custom-header">
+        <div class="header-content">
+            <div class="logo-container">
+                <div class="logo-box">
+                    <img src="{logo_left_b64}" alt="Logo Izquierdo">
+                </div>
+            </div>
+            <div class="title-container">
+                <h1 class="header-title">Clasificador de Género con IA</h1>
+                <p class="header-subtitle">Análisis inteligente con visualización de interpretabilidad</p>
+            </div>
+            <div class="logo-container">
+                <div class="logo-box">
+                    <img src="{logo_right_b64}" alt="Logo Derecho">
+                </div>
+            </div>
+        </div>
+    </div>
+    ''', unsafe_allow_html=True)
+    
+except Exception as e:
+    # Si no encuentra los logos, muestra emojis
+    st.markdown('''
+    <div class="custom-header">
+        <div class="header-content">
+            <div class="logo-container">
+                <div class="logo-box">
+                    <span class="logo-icon">🎓</span>
+                </div>
+            </div>
+            <div class="title-container">
+                <h1 class="header-title">Clasificador de Género con IA</h1>
+                <p class="header-subtitle">Análisis inteligente con visualización de interpretabilidad</p>
+            </div>
+            <div class="logo-container">
+                <div class="logo-box">
+                    <span class="logo-icon">🤖</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    ''', unsafe_allow_html=True)
 
 # ---------------------- Cargar modelo ----------------------
 @st.cache_resource
