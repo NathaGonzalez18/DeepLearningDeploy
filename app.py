@@ -148,7 +148,7 @@ st.markdown("""
         text-align: center;
         color: #a8b2d1;
         font-size: 5.2rem;
-        margin-bottom: 2rem;
+        margin-bottom: 5rem;
         font-weight: 300;
     }
     
@@ -165,7 +165,7 @@ st.markdown("""
     
     /* Métricas personalizadas */
     [data-testid="stMetricValue"] {
-        font-size: 4rem;
+        font-size: 8rem;
         font-weight: 700;
         color: #FFD700;
     }
