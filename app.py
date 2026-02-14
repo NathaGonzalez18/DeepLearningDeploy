@@ -62,8 +62,8 @@ st.markdown("""
     }
     
     .logo-box {
-        width: 80px;
-        height: 80px;
+        width: 110px;
+        height: 110px;
         background: white;
         border-radius: 10px;
         display: flex;
@@ -92,7 +92,7 @@ st.markdown("""
     
     .header-title {
         margin: 0;
-        color: #FFD700 !important;
+        color: #fcfcfc !important;
         font-size: 2.2rem;
         font-weight: 900;
         text-shadow: 3px 3px 8px rgba(0, 0, 0, 0.9);
@@ -115,8 +115,8 @@ st.markdown("""
         }
         
         .logo-box {
-            width: 60px;
-            height: 60px;
+            width: 80px;
+            height: 80px;
         }
         
         .header-title {
@@ -301,7 +301,7 @@ st.markdown("""
 
 try:
     # 👇 CAMBIA ESTAS RUTAS POR LAS DE TUS LOGOS 👇
-    logo_left = Image.open("logo-original-white.png")
+    logo_left = Image.open("logo-externado.png")
     logo_right = Image.open("NeuroMInds2.png")
     # 👆 CAMBIA ESTAS RUTAS POR LAS DE TUS LOGOS 👆
     
@@ -423,9 +423,6 @@ def saliency_map(model, image_tensor, class_index):
     return saliency.numpy()
 
 # ---------------------- Layout principal ----------------------
-st.title("🔮 Clasificador de Género con IA")
-st.markdown('<p class="subtitle">Análisis inteligente con visualización de interpretabilidad</p>', unsafe_allow_html=True)
-
 # Espaciado
 st.markdown("<br>", unsafe_allow_html=True)
 
