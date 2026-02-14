@@ -93,7 +93,7 @@ st.markdown("""
     .header-title {
         margin: 0;
         color: #fcfcfc !important;
-        font-size: 2.2rem;
+        font-size: 4.2rem;
         font-weight: 900;
         text-shadow: 3px 3px 8px rgba(0, 0, 0, 0.9);
         line-height: 1.2;
@@ -101,7 +101,7 @@ st.markdown("""
     }
     
     .header-subtitle {
-        margin: 0.5rem 0 0 0;
+        margin: 2.5rem 0 0 0;
         color: rgba(255, 255, 255, 0.95);
         font-size: 0.95rem;
         font-weight: 500;
@@ -133,7 +133,7 @@ st.markdown("""
         font-weight: 700;
         text-align: center;
         color: #2d9ba4;
-        font-size: 3rem !important;
+        font-size: 4rem !important;
         margin-bottom: 0.5rem;
         text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
     }
@@ -147,7 +147,7 @@ st.markdown("""
     .subtitle {
         text-align: center;
         color: #a8b2d1;
-        font-size: 1.2rem;
+        font-size: 2.2rem;
         margin-bottom: 2rem;
         font-weight: 300;
     }
@@ -165,7 +165,7 @@ st.markdown("""
     
     /* Métricas personalizadas */
     [data-testid="stMetricValue"] {
-        font-size: 2rem;
+        font-size: 3rem;
         font-weight: 700;
         color: #FFD700;
     }
@@ -196,7 +196,7 @@ st.markdown("""
     [data-testid="stFileUploader"] label {
         color: #a8b2d1 !important;
         font-weight: 500;
-        font-size: 1.1rem;
+        font-size: 2.1rem;
     }
     
     /* Botones */
@@ -207,7 +207,7 @@ st.markdown("""
         border: none;
         padding: 0.8rem 2.5rem;
         font-weight: 600;
-        font-size: 1rem;
+        font-size: 2rem;
         box-shadow: 0 4px 15px rgba(45, 155, 164, 0.4);
         transition: all 0.3s ease;
     }
@@ -269,7 +269,7 @@ st.markdown("""
     [data-testid="stImage"] {
         background: rgba(45, 155, 164, 0.1);
         backdrop-filter: blur(10px);
-        border-radius: 20px;
+        border-radius: 30px;
         padding: 1rem;
         border: 1px solid rgba(45, 155, 164, 0.3);
     }
