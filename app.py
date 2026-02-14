@@ -62,7 +62,7 @@ st.markdown("""
     }
     
     .logo-box {
-        width: 210px;
+        width: 310px;
         height: 210px;
         background: white;
         border-radius: 10px;
@@ -103,7 +103,7 @@ st.markdown("""
     .header-subtitle {
         margin: 0.5rem 0 0 0;
         color: rgba(255, 255, 255, 0.95);
-        font-size: 1.95rem;
+        font-size: 2.95rem;
         font-weight: 500;
         text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
     }
@@ -165,7 +165,7 @@ st.markdown("""
     
     /* Métricas personalizadas */
     [data-testid="stMetricValue"] {
-        font-size: 3rem;
+        font-size: 4rem;
         font-weight: 700;
         color: #FFD700;
     }
@@ -173,7 +173,7 @@ st.markdown("""
     [data-testid="stMetricLabel"] {
         color: #a8b2d1;
         font-weight: 500;
-        font-size: 1rem;
+        font-size: 3rem;
     }
     
     [data-testid="metric-container"] {
@@ -196,7 +196,7 @@ st.markdown("""
     [data-testid="stFileUploader"] label {
         color: #a8b2d1 !important;
         font-weight: 500;
-        font-size: 2.1rem;
+        font-size: 3.1rem;
     }
     
     /* Botones */
@@ -229,7 +229,7 @@ st.markdown("""
     .stTabs [data-baseweb="tab"] {
         background: transparent;
         color: #a8b2d1;
-        border-radius: 10px;
+        border-radius: 30px;
         font-weight: 500;
         padding: 0.8rem 1.5rem;
         font-size: 4rem;
