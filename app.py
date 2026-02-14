@@ -231,8 +231,8 @@ st.markdown("""
         color: #a8b2d1;
         border-radius: 10px;
         font-weight: 500;
-        padding: 0.8rem 1.5rem
-        font-size: 3rem;;
+        padding: 0.8rem 1.5rem;
+        font-size: 4rem;
     }
     
     .stTabs [aria-selected="true"] {
@@ -466,9 +466,9 @@ if uploaded_file is not None:
         # Métricas en subcolomnas
         met1, met2 = st.columns(2)
         with met1:
-            st.metric("👩 Mujer", f"{prob_female*100:.1f}%")
+            st.metric("### 👩 Mujer", f"{prob_female*100:.1f}%")
         with met2:
-            st.metric("👨 Hombre", f"{prob_male*100:.1f}%")
+            st.metric("### 👨 Hombre", f"{prob_male*100:.1f}%")
         
         st.markdown("<br>", unsafe_allow_html=True)
         
@@ -478,7 +478,7 @@ if uploaded_file is not None:
         
         # Barra de confianza
         confidence = max(prob_male, prob_female) * 100
-        st.markdown(f'<p style="font-size: 3.1rem; font-weight: 600; color: #ffffff;">Confianza: {confidence:.1f}%</p>', unsafe_allow_html=True)
+        st.markdown(f'<p style="font-size: 2.5rem; font-weight: 600; color: #ffffff;">Confianza: {confidence:.1f}%</p>', unsafe_allow_html=True)
 #                      
         st.progress(confidence / 100)
 
