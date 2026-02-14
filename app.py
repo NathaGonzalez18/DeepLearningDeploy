@@ -298,10 +298,11 @@ st.markdown("""
 # ENCABEZADO CON LOGOS
 # ============================================
 
+
 try:
     # 👇 CAMBIA ESTAS RUTAS POR LAS DE TUS LOGOS 👇
-    logo_left = Image.open("/Users/nathagonzalez/Documents/Universidad/DeepLearning/ProyectoDeepDeploy/DeepLearningDeploy/logo-externado.png")
-    logo_right = Image.open("/Users/nathagonzalez/Documents/Universidad/DeepLearning/ProyectoDeepDeploy/DeepLearningDeploy/NeuroMInds2.png")
+    logo_left = Image.open("logo-original-white.png")
+    logo_right = Image.open("NeuroMInds2.png")
     # 👆 CAMBIA ESTAS RUTAS POR LAS DE TUS LOGOS 👆
     
     logo_left_b64 = image_to_base64(logo_left)
@@ -328,8 +329,38 @@ try:
     </div>
     ''', unsafe_allow_html=True)
     
+except FileNotFoundError as e:
+    # Si no encuentra los archivos de logos
+    st.error(f"⚠️ No se encontraron los logos. Error: {str(e)}")
+    st.info("💡 Verifica que los archivos 'logo-original-white.png' y 'NeuroMInds2.png' estén en la misma carpeta que este archivo .py")
+    
+    # Mostrar header con emojis como fallback
+    st.markdown('''
+    <div class="custom-header">
+        <div class="header-content">
+            <div class="logo-container">
+                <div class="logo-box">
+                    <span class="logo-icon">🎓</span>
+                </div>
+            </div>
+            <div class="title-container">
+                <h1 class="header-title">Clasificador de Género con IA</h1>
+                <p class="header-subtitle">Análisis inteligente con visualización de interpretabilidad</p>
+            </div>
+            <div class="logo-container">
+                <div class="logo-box">
+                    <span class="logo-icon">🤖</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    ''', unsafe_allow_html=True)
+
 except Exception as e:
-    # Si no encuentra los logos, muestra emojis
+    # Cualquier otro error
+    st.error(f"⚠️ Error al cargar los logos: {str(e)}")
+    
+    # Mostrar header con emojis como fallback
     st.markdown('''
     <div class="custom-header">
         <div class="header-content">
