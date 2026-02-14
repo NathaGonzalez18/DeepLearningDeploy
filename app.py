@@ -147,7 +147,7 @@ st.markdown("""
     .subtitle {
         text-align: center;
         color: #a8b2d1;
-        font-size: 3.2rem;
+        font-size: 4.2rem;
         margin-bottom: 2rem;
         font-weight: 300;
     }
@@ -491,7 +491,7 @@ if uploaded_file is not None:
 
     with tab1:
         st.markdown("## Regiones de Mayor Influencia")
-        st.markdown("###Los mapas de calor muestran las áreas que más contribuyeron a la clasificación")
+        st.markdown("### Los mapas de calor muestran las áreas que más contribuyeron a la clasificación")
         
         target_layers_idx = [1, 3, 4]
         cols = st.columns(len(target_layers_idx))
@@ -507,7 +507,7 @@ if uploaded_file is not None:
 
     with tab2:
         st.markdown("## Análisis de Sensibilidad por Píxel")
-        st.markdown("###Visualización de qué píxeles tienen mayor impacto en la predicción")
+        st.markdown("### Visualización de qué píxeles tienen mayor impacto en la predicción")
         
         sal_map = saliency_map(model, img_input, class_index=class_index)
         sal_map_resized = cv2.resize(sal_map, (img.shape[1], img.shape[0]))
