@@ -147,7 +147,7 @@ st.markdown("""
     .subtitle {
         text-align: center;
         color: #a8b2d1;
-        font-size: 4.2rem;
+        font-size: 5.2rem;
         margin-bottom: 2rem;
         font-weight: 300;
     }
@@ -231,7 +231,8 @@ st.markdown("""
         color: #a8b2d1;
         border-radius: 10px;
         font-weight: 500;
-        padding: 0.8rem 1.5rem;
+        padding: 0.8rem 1.5rem
+        font-size: 3rem;;
     }
     
     .stTabs [aria-selected="true"] {
@@ -460,7 +461,7 @@ if uploaded_file is not None:
         st.image(img, width=500)
 
     with col2:
-        st.markdown("### 🎯 Resultados del Análisis")
+        st.markdown("## 🎯 Resultados del Análisis")
         
         # Métricas en subcolomnas
         met1, met2 = st.columns(2)
@@ -477,7 +478,8 @@ if uploaded_file is not None:
         
         # Barra de confianza
         confidence = max(prob_male, prob_female) * 100
-        st.markdown(f"**Confianza:** {confidence:.1f}%")
+        st.markdown(f'<p style="font-size: 3.1rem; font-weight: 600; color: #ffffff;">Confianza: {confidence:.1f}%</p>', unsafe_allow_html=True)
+#                      
         st.progress(confidence / 100)
 
     # ---------------------- Espaciado ----------------------
