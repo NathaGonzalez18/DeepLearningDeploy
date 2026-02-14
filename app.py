@@ -207,7 +207,7 @@ st.markdown("""
         border: none;
         padding: 0.8rem 2.5rem;
         font-weight: 600;
-        font-size: 2rem;
+        font-size: 3rem;
         box-shadow: 0 4px 15px rgba(45, 155, 164, 0.4);
         transition: all 0.3s ease;
     }
@@ -495,11 +495,11 @@ if uploaded_file is not None:
         for i, idx_layer in enumerate(target_layers_idx):
             heatmap = grad_cam_sequential(model, img_input, class_index=class_index, target_layer_index=idx_layer)
             heatmap_resized = cv2.resize(heatmap, (img.shape[1], img.shape[0]))
-            heatmap_resized = np.uint8(355 * heatmap_resized)
+            heatmap_resized = np.uint8(255 * heatmap_resized)
             superimposed_img = cv2.addWeighted(img, 0.6, cv2.applyColorMap(heatmap_resized, cv2.COLORMAP_JET), 0.4, 0)
             
             with cols[i]:
-                st.image(superimposed_img, caption=f"Capa: {model.layers[idx_layer].name}", width=350)
+                st.image(superimposed_img, caption=f"Capa: {model.layers[idx_layer].name}", width=400)
 
     with tab2:
         st.markdown("### Análisis de Sensibilidad por Píxel")
@@ -507,7 +507,7 @@ if uploaded_file is not None:
         
         sal_map = saliency_map(model, img_input, class_index=class_index)
         sal_map_resized = cv2.resize(sal_map, (img.shape[1], img.shape[0]))
-        sal_map_img = np.uint8(355 * sal_map_resized)
+        sal_map_img = np.uint8(255 * sal_map_resized)
         sal_map_img = cv2.applyColorMap(sal_map_img, cv2.COLORMAP_JET)
         superimposed_sal = cv2.addWeighted(img, 0.6, sal_map_img, 0.4, 0)
         
