@@ -101,9 +101,9 @@ st.markdown("""
     }
     
     .header-subtitle {
-        margin: 2.5rem 0 0 0;
+        margin: 0.5rem 0 0 0;
         color: rgba(255, 255, 255, 0.95);
-        font-size: 0.95rem;
+        font-size: 1.95rem;
         font-weight: 500;
         text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
     }
@@ -120,11 +120,11 @@ st.markdown("""
         }
         
         .header-title {
-            font-size: 1.5rem;
+            font-size: 2.5rem;
         }
         
         .header-subtitle {
-            font-size: 0.85rem;
+            font-size: 1.85rem;
         }
     }
     
@@ -495,7 +495,7 @@ if uploaded_file is not None:
         for i, idx_layer in enumerate(target_layers_idx):
             heatmap = grad_cam_sequential(model, img_input, class_index=class_index, target_layer_index=idx_layer)
             heatmap_resized = cv2.resize(heatmap, (img.shape[1], img.shape[0]))
-            heatmap_resized = np.uint8(255 * heatmap_resized)
+            heatmap_resized = np.uint8(355 * heatmap_resized)
             superimposed_img = cv2.addWeighted(img, 0.6, cv2.applyColorMap(heatmap_resized, cv2.COLORMAP_JET), 0.4, 0)
             
             with cols[i]:
@@ -507,7 +507,7 @@ if uploaded_file is not None:
         
         sal_map = saliency_map(model, img_input, class_index=class_index)
         sal_map_resized = cv2.resize(sal_map, (img.shape[1], img.shape[0]))
-        sal_map_img = np.uint8(255 * sal_map_resized)
+        sal_map_img = np.uint8(355 * sal_map_resized)
         sal_map_img = cv2.applyColorMap(sal_map_img, cv2.COLORMAP_JET)
         superimposed_sal = cv2.addWeighted(img, 0.6, sal_map_img, 0.4, 0)
         
