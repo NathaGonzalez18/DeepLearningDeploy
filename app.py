@@ -103,7 +103,7 @@ st.markdown("""
     .header-subtitle {
         margin: 0.5rem 0 0 0;
         color: rgba(255, 255, 255, 0.95);
-        font-size: 2.95rem;
+        font-size: 4.95rem;
         font-weight: 500;
         text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
     }
@@ -165,15 +165,15 @@ st.markdown("""
     
     /* Métricas personalizadas */
     [data-testid="stMetricValue"] {
-        font-size: 8rem;
+        font-size: 4rem;
         font-weight: 700;
         color: #FFD700;
     }
     
     [data-testid="stMetricLabel"] {
         color: #a8b2d1;
-        font-weight: 500;
-        font-size: 5rem;
+        font-weight: 700;
+        font-size: 10rem;
     }
     
     [data-testid="metric-container"] {
