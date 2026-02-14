@@ -173,14 +173,14 @@ st.markdown("""
     [data-testid="stMetricLabel"] {
         color: #a8b2d1;
         font-weight: 500;
-        font-size: 3rem;
+        font-size: 5rem;
     }
     
     [data-testid="metric-container"] {
         background: rgba(45, 155, 164, 0.15);
         backdrop-filter: blur(10px);
-        border-radius: 15px;
-        padding: 1.5rem;
+        border-radius: 25px;
+        padding: 2.5rem;
         border: 1px solid rgba(45, 155, 164, 0.3);
     }
     
@@ -466,9 +466,9 @@ if uploaded_file is not None:
         # Métricas en subcolomnas
         met1, met2 = st.columns(2)
         with met1:
-            st.metric("### 👩 Mujer", f"{prob_female*100:.1f}%")
+            st.metric(" 👩 Mujer", f"{prob_female*100:.1f}%")
         with met2:
-            st.metric("### 👨 Hombre", f"{prob_male*100:.1f}%")
+            st.metric(" 👨 Hombre", f"{prob_male*100:.1f}%")
         
         st.markdown("<br>", unsafe_allow_html=True)
         
@@ -489,7 +489,7 @@ if uploaded_file is not None:
     st.markdown("## 🔍 Análisis de Interpretabilidad")
     st.markdown('<p class="subtitle">Descubre qué regiones de la imagen influyeron en la decisión del modelo</p>', unsafe_allow_html=True)
     
-    tab1, tab2 = st.tabs(["🔥 Grad-CAM (Mapas de Calor)", "🌈 Saliency Map (Sensibilidad)"])
+    tab1, tab2 = st.tabs(["## 🔥 Grad-CAM (Mapas de Calor)", "## 🌈 Saliency Map (Sensibilidad)"])
 
     with tab1:
         st.markdown("## Regiones de Mayor Influencia")
